@@ -807,6 +807,7 @@ def drawdown_details(drawdown):
 
         df['start'] = df['start'].dt.strftime('%Y-%m-%d')
         df['end'] = df['end'].dt.strftime('%Y-%m-%d')
+        df['valley'] = _pd.to_datetime(df['valley'], errors='coerce')
         df['valley'] = df['valley'].dt.strftime('%Y-%m-%d')
 
         return df
