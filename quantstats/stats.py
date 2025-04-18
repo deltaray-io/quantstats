@@ -19,6 +19,7 @@
 # limitations under the License.
 
 from warnings import warn
+
 import pandas as _pd
 import numpy as _np
 from math import ceil as _ceil, sqrt as _sqrt
@@ -841,11 +842,15 @@ def kelly_criterion(returns, prepare_returns=True):
 def r_squared(returns, benchmark, prepare_returns=True):
     """Measures the straight line fit of the equity curve"""
     # slope, intercept, r_val, p_val, std_err = _linregress(
-    if prepare_returns:
-        returns = _utils._prepare_returns(returns)
-    _, _, r_val, _, _ = _linregress(
-        returns, _utils._prepare_benchmark(benchmark, returns.index))
-    return r_val**2
+    try:
+        if prepare_returns:
+            returns = _utils._prepare_returns(returns)
+        _, _, r_val, _, _ = _linregress(
+            returns, _utils._prepare_benchmark(benchmark, returns.index))
+        return r_val**2
+    except ValueError:
+        # No change in the NAV yields `Cannot calculate a linear regression if all x values are identical`
+        return _np.nan
 
 
 def r2(returns, benchmark):
